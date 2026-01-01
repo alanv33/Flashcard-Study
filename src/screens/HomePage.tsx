@@ -4,14 +4,11 @@ import { getAllDecks, DeckSummary, saveDeck } from "../storage/deckStorage";
 import { FlatList } from "react-native";
 import { useState, useEffect } from "react";
 import AddDeckButton from "../components/HomePage/AddDeckButton"
-import AddDeckPopup from "../components/HomePage/AddDeckPopup"
 import { Deck } from "../models/StudyScreen";
 import { deleteDeck as deleteDeckFromStorage, renameDeck } from "@/src/storage/deckStorage";
-import { useDeck } from "../hooks/useDeck";
 
 export default function HomePage() {
     const [decks, setDecks] = useState<DeckSummary[]>([]);
-    const [showAddDialog, setShowAddDialog] = useState(false);
 
     useEffect(() => {
         async function getDecks() {
@@ -23,7 +20,6 @@ export default function HomePage() {
 
     async function onConfirmAddDialog(deck: Deck) {
         await saveDeck(deck);
-        setShowAddDialog(false);
         const newDeckSummary: DeckSummary = {
             id: deck.id,
             name: deck.name,
@@ -32,10 +28,6 @@ export default function HomePage() {
 
         setDecks(prev => [...prev, newDeckSummary]);
 
-    }
-
-    function onCancelAddDialog() {
-        setShowAddDialog(false);
     }
 
     async function onDeleteDeck(deckId: string) {
@@ -52,8 +44,7 @@ export default function HomePage() {
     return (
         <SafeAreaView style={{ flex: 1 }}>
             <FlatList data={decks} renderItem={({ item }) => (<DeckIcon deckId={item.id} deckName={item.name} onDelete={onDeleteDeck} onRename={onRenameDeck} />)} />
-            <AddDeckButton setShowDialog={setShowAddDialog} />
-            {showAddDialog ? <AddDeckPopup visible={showAddDialog} onCancel={onCancelAddDialog} onConfirm={onConfirmAddDialog} /> : null}
+            <AddDeckButton onConfirm={onConfirmAddDialog} />
         </SafeAreaView>
 
     );

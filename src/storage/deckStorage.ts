@@ -45,11 +45,11 @@ export async function saveDeck(deck: Deck): Promise<void> {
   ]);
 }
 
-export async function renameDeck(id: string, newName: string) : Promise<void>{
+export async function renameDeck(id: string, newName: string): Promise<void> {
   const value = await AsyncStorage.getItem(id);
-  if(!value) return;
+  if (!value) return;
   const oldDeck = JSON.parse(value) as Deck;
-  const newDeck: Deck = {...oldDeck, name:newName};
+  const newDeck: Deck = { ...oldDeck, name: newName };
   await saveDeck(newDeck);
 
 }

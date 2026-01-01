@@ -71,10 +71,12 @@ export default function OptionsMenu({ deckId, onDelete, onRename }: Props) {
 
   return (
     <View style={styles.container}>
+      {/*3 dots icon*/}
       <Pressable style={styles.moreButton} ref={dotsRef} onPress={openMenu} hitSlop={10}>
         <AntDesign name="more" size={iconSize} color="black" />
       </Pressable>
 
+      {/*Options Menu*/}
       <Modal transparent visible={mounted} onRequestClose={closeMenu} animationType="none">
         <Pressable onPress={closeMenu} style={StyleSheet.absoluteFill} />
 
@@ -95,6 +97,7 @@ export default function OptionsMenu({ deckId, onDelete, onRename }: Props) {
         </Animated.View>
       </Modal>
 
+      {/*Rename Popup*/}
       <Modal transparent visible={renameVisible} animationType="fade">
         <View style={styles.overlay}>
           <Pressable style={StyleSheet.absoluteFill} onPress={() => { setRenameVisible(false); setDeckName("") }} />
@@ -115,11 +118,11 @@ export default function OptionsMenu({ deckId, onDelete, onRename }: Props) {
             />
 
             <Pressable style={styles.confirmButton}
-              onPress={() => {onRename(deckId, newDeckName); setRenameVisible(false)}}
+              onPress={() => { onRename(deckId, newDeckName); setRenameVisible(false) }}
             >
               <Text>Confirm</Text>
             </Pressable>
-            <Pressable onPress={() => { setRenameVisible(false); setDeckName("");}} style={styles.cancelButton}>
+            <Pressable onPress={() => { setRenameVisible(false); setDeckName(""); }} style={styles.cancelButton}>
               <Text>Cancel</Text>
             </Pressable>
           </View>
@@ -130,6 +133,21 @@ export default function OptionsMenu({ deckId, onDelete, onRename }: Props) {
 }
 
 const styles = StyleSheet.create({
+  //Container style
+  container: {
+    alignItems: "center",
+    height: "100%",
+    flex: 1,
+  },
+  // 3 dots button style
+  moreButton: {
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 1,
+    width: "100%",
+  },
+
+  // Menu styles
   menu: {
     position: "absolute",
     backgroundColor: "white",
@@ -144,18 +162,9 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     paddingHorizontal: 12,
   },
-  moreButton: {
-    alignItems: "center",
-    justifyContent: "center",
-    flex: 1,
-    width: "100%",
-  },
-  container: {
-    alignItems: "center",
-    height: "100%",
-    flex: 1,
-  },
 
+
+  //Rename popup styles
   overlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.5)",
