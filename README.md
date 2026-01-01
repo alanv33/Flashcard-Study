@@ -1,0 +1,1 @@
+The app is meant to be ran on android. Releases for IOS have not been tested or released. Web view works, but the view is heavily distorted. 
