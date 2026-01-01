@@ -19,7 +19,7 @@ export default function DeleteButton({setShowDialog }:  Props ) {
 const styles = StyleSheet.create({
     deleteButton: {
         position: "absolute",
-        bottom: 0,
-        left: 1,
+        bottom: 10,
+        left: 5,
     }
 })

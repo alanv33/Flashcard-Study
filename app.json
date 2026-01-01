@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "FlashCards",
-    "slug": "FlashCards",
+    "slug": "flashfards",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -12,6 +12,7 @@
       "supportsTablet": true
     },
     "android": {
+      "package": "com.alanv33.flashcards",
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -43,6 +44,12 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "0fca38b3-d387-418c-affd-e7b69e3a929c"
+      }
     }
   }
 }

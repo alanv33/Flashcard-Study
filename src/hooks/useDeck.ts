@@ -1,20 +1,19 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
-import type { Deck, Flashcard } from "../models";
+import type { Deck, Flashcard } from "../models/StudyScreen";
 
 export function useDeck(deckId: string) {
     const [deck, setDeck] = useState<Deck | null>(null);
     const [cards, setCards] = useState<Flashcard[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [error, setError] = useState<string | null>(null);
-    const storageKey: string = `deck:${deckId}`;
 
     async function loadDeck() {
         try {
             setLoading(true);
             setError(null);
             let resolvedDeck: Deck;
-            const value = await AsyncStorage.getItem(storageKey);
+            const value = await AsyncStorage.getItem(deckId);
             if (value === null) {
                 resolvedDeck = {
                     id: deckId,
@@ -41,11 +40,12 @@ export function useDeck(deckId: string) {
             const nextDeck: Deck = {
                 id: deckId,
                 cards: nextCards,
+                name: deck?.name,
             };
 
             setDeck(nextDeck);
 
-            void AsyncStorage.setItem(storageKey, JSON.stringify(nextDeck));
+            void AsyncStorage.setItem(deckId, JSON.stringify(nextDeck));
 
             return nextCards;
         });
@@ -58,26 +58,28 @@ export function useDeck(deckId: string) {
             const nextDeck: Deck = {
                 id: deckId,
                 cards: nextCards,
+                name: deck?.name
             };
 
             setDeck(nextDeck);
 
-            void AsyncStorage.setItem(storageKey, JSON.stringify(nextDeck));
+            void AsyncStorage.setItem(deckId, JSON.stringify(nextDeck));
             return nextCards;
         });
     }
 
     function deleteCard(card: Flashcard) {
-        let cardId : string = card.id;
+        let cardId: string = card.id;
         setCards(prev => {
             const nextCards = prev.filter(c => c.id !== cardId);
             const nextDeck: Deck = {
                 id: deckId,
                 cards: nextCards,
+                name: deck?.name
             }
             setDeck(nextDeck);
 
-            void AsyncStorage.setItem(storageKey, JSON.stringify(nextDeck));
+            void AsyncStorage.setItem(deckId, JSON.stringify(nextDeck));
             return nextCards;
         });
     }
@@ -87,7 +89,7 @@ export function useDeck(deckId: string) {
         setCards([]);
         setLoading(false);
         setError(null);
-        void AsyncStorage.removeItem(storageKey);
+        void AsyncStorage.removeItem(deckId);
     }
 
     useEffect(() => {

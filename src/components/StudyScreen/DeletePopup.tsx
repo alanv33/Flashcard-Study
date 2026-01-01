@@ -40,8 +40,8 @@ const styles = StyleSheet.create({
     backgroundColor: "white",
     padding: 20,
     borderRadius: 8,
-    height: "30%",
-    width: "90%",
+    height: "20%",
+    width: "70%",
     position: "relative",
     alignItems: "center",
   },
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 24,
     position: "absolute",
-    top: 60
+    top: 45
   },
 
   cancelButton: {

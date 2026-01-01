@@ -1,10 +1,9 @@
 import { useState } from "react";
-import { useDeck } from "../hooks/useDeck";
+import { Flashcard } from "../../models/StudyScreen";
 import { SwipeableFlashcard } from "./SwipableFlashCard";
-import { Flashcard } from "../models";
 
 type Props = {
-  cards: Flashcard [],
+  cards: Flashcard[],
   error: string | null,
   loading: boolean,
   index: number;

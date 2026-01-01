@@ -1,4 +1,4 @@
-import { Pressable, Text, StyleSheet } from "react-native";
+import { Pressable, Text, StyleSheet, useWindowDimensions } from "react-native";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Animated, { useSharedValue, useAnimatedStyle, withSpring, runOnJS } from "react-native-reanimated";
 
@@ -10,10 +10,10 @@ type Props = {
 };
 
 export function SwipeableFlashcard({ text, onPress, onSwipeLeft, onSwipeRight }: Props) {
+    const { width } = useWindowDimensions();
+    const textSize = width * 0.042;
     const translateX = useSharedValue(0);
-
     const swipeThreshold = 80;
-
     const pan = Gesture.Pan()
         .onUpdate((e) => {
             translateX.value = e.translationX;
@@ -38,7 +38,7 @@ export function SwipeableFlashcard({ text, onPress, onSwipeLeft, onSwipeRight }:
         <GestureDetector gesture={pan}>
             <Animated.View style={[styles.flashCard, animatedStyle]}>
                 <Pressable onPress={onPress} style={[styles.pressArea, StyleSheet.absoluteFill]}>
-                    <Text style={styles.text}>{text}</Text>
+                    <Text style={[styles.text, {fontSize: textSize}]}>{text}</Text>
                 </Pressable>
             </Animated.View>
         </GestureDetector>
@@ -59,7 +59,8 @@ const styles = StyleSheet.create({
         flex:1
     },
     text: {
-        fontWeight: "bold",
+        fontWeight: 500,
         textAlign: "center",
+        width: "85%"
     },
 });

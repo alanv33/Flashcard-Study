@@ -1,7 +1,7 @@
-import { View, Pressable, StyleSheet, Modal, Text, TextInput } from "react-native";
-import { useState } from "react";
 import * as Crypto from "expo-crypto";
-import { Flashcard } from "../models";
+import { useState } from "react";
+import { Modal, Pressable, StyleSheet, Text, TextInput, View } from "react-native";
+import { Flashcard } from "../../models/StudyScreen";
 
 type Props = {
     visible: boolean;
@@ -9,7 +9,7 @@ type Props = {
     onConfirm: (card: Flashcard) => void;
 };
 
-export default function AddPopup({ visible, onCancel, onConfirm }: Props) {
+export default function AddCardPopup({ visible, onCancel, onConfirm }: Props) {
     const [frontText, setFrontText] = useState("");
     const [backText, setBackText] = useState("");
     const [frontHeight, setFrontHeight] = useState(60);
@@ -21,8 +21,8 @@ export default function AddPopup({ visible, onCancel, onConfirm }: Props) {
                 <Pressable style={StyleSheet.absoluteFill} onPress={onCancel} />
 
                 <View style={styles.popup}>
-                    <Text style={styles.popupText}>Add Card</Text>
-
+                    <Text style={styles.headerText}>Add Card</Text>
+                    <Text style={styles.questionText}> Question: </Text>
                     <TextInput
                         value={frontText}
                         onChangeText={setFrontText}
@@ -32,9 +32,9 @@ export default function AddPopup({ visible, onCancel, onConfirm }: Props) {
                             setFrontHeight(e.nativeEvent.contentSize.height)
                         }
                         maxLength={250}
-                        style={[styles.questionTextInput, { height: frontHeight }]}
+                        style={[styles.questionTextBox, { height: frontHeight }]}
                     />
-
+                    <Text style={styles.answerText}>Answer: </Text>
                     <TextInput
                         value={backText}
                         onChangeText={setBackText}
@@ -44,7 +44,7 @@ export default function AddPopup({ visible, onCancel, onConfirm }: Props) {
                             setBackHeight(e.nativeEvent.contentSize.height)
                         }
                         maxLength={350}
-                        style={[styles.answerTextInput, { height: backHeight }]}
+                        style={[styles.answerTextBox, { height: backHeight }]}
                     />
 
                     <Pressable style={styles.confirmButton}
@@ -81,16 +81,16 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         width: "90%",
         position: "relative",
-        alignItems: "center",
         paddingBottom: 120,
     },
 
-    popupText: {
+    headerText: {
         fontWeight: "bold",
         textAlign: "center",
         fontSize: 16,
         position: "absolute",
-        top: 20
+        top: 20,
+        alignSelf: "center"
     },
 
     cancelButton: {
@@ -115,23 +115,31 @@ const styles = StyleSheet.create({
         paddingVertical: 12
     },
 
-    questionTextInput: {
+    questionText: {
+        marginTop: 40,
+        textAlign: "left"
+    },
+
+    answerText: {
+        marginTop: 12,
+        textAlign: "left"
+    },
+
+    questionTextBox: {
         width: "100%",
         borderWidth: 2,
         borderRadius: 4,
-        marginTop: 40,
         padding: 12,
         minHeight: 60,
         textAlignVertical: "top",
     },
 
-    answerTextInput: {
+    answerTextBox: {
         width: "100%",
         borderWidth: 2,
         borderRadius: 4,
         padding: 12,
         minHeight: 80,
-        marginTop: 12,
         textAlignVertical: "top",
     },
 });
