@@ -26,7 +26,7 @@ export default function DeleteButton({ onConfirm }: Props) {
                     <View style={styles.popup}>
                         <Text style={styles.popupText}>Delete this card?</Text>
 
-                        <Pressable onPress={onConfirm} style={styles.confirmButton}>
+                        <Pressable onPress={() => {onConfirm(); setVisible(false)}} style={styles.confirmButton}>
                             <Text>Confirm</Text>
                         </Pressable>
 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { StyleSheet } from "react-native";
+import { StyleSheet, FlatList, View } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AddCardButton from '../components/StudyScreen/AddCardButton';
@@ -22,13 +22,35 @@ export default function StudyScreen({ deckId }: { deckId: string }) {
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaView style={styles.areaView}>
-        <FlashcardView index={index} setIndex={setIndex} error={error} loading={loading} cards={cards} />
-        <DeleteButton onConfirm={onConfirmDeleteDialog} />
-        <AddCardButton onConfirm={onConfirmAddDialog} />
-      </SafeAreaView>
-    </GestureHandlerRootView>
+    <SafeAreaView style={styles.areaView}>
+      <View style={{ height: '70%', paddingTop: 130 }}>
+        <FlatList
+          data={cards}
+          keyExtractor={(item) => item.id}
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          renderItem={({ item }) => (
+            <FlashcardView
+              card={item}
+              error={error}
+              loading={loading}
+            />
+          )}
+          ListEmptyComponent={
+            <FlashcardView card={null} error={error} loading={loading} />
+          }
+          onMomentumScrollEnd={(e) => {
+            const newIndex = Math.round(
+              e.nativeEvent.contentOffset.x / e.nativeEvent.layoutMeasurement.width
+            );
+            setIndex(newIndex);
+          }}
+        />
+      </View>
+      <DeleteButton onConfirm={onConfirmDeleteDialog} />
+      <AddCardButton onConfirm={onConfirmAddDialog} />
+    </SafeAreaView>
   );
 }
 
@@ -37,7 +59,6 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     alignItems: 'center',
-    justifyContent: 'center',
   },
 
 })
