@@ -1,55 +1,86 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { Pressable, View, Text, StyleSheet, useWindowDimensions } from "react-native";
+import Animated, { useSharedValue, useAnimatedStyle, withTiming } from "react-native-reanimated";
 import { Flashcard } from "../../models/StudyScreen";
 
 type Props = {
-  card: Flashcard | null,
-  error: string | null,
-  loading: boolean,
+  card: Flashcard | null;
+  error: string | null;
+  loading: boolean;
 };
 
 export default function FlashcardView({ card, error, loading }: Props) {
   const { width, height } = useWindowDimensions();
-  const [showBack, setShowBack] = useState(false);
+  const rot = useSharedValue(0);
 
-  // reset flip when card changes
-  useEffect(() => setShowBack(false), [card?.id]);
+  useEffect(() => {
+    rot.value = 0;
+  }, [card?.id]);
 
-  const displayText =
-    error ? error :
-      loading ? "Loading..." :
-      card === null ? "This deck is empty" :
-        showBack ? card.back : card.front;
+  const frontStyle = useAnimatedStyle(() => ({
+    transform: [{ perspective: 1000 }, { rotateY: `${rot.value}deg` }],
+  }));
+
+  const backStyle = useAnimatedStyle(() => ({
+    transform: [{ perspective: 1000 }, { rotateY: `${rot.value + 180}deg` }],
+  }));
+
+  function onPress() {
+    if (!card || loading || error) return;
+    rot.value = withTiming(rot.value === 0 ? 180 : 0, { duration: 220 });
+  }
 
   return (
-    <View style={[styles.flashCard, {width: width}]}>
-      <Pressable
-        style={styles.pressArea}
-        onPress={() => setShowBack(v => !v)}
-      >
-        <Text style={styles.text}>{displayText}</Text>
+    <View style={[styles.container, { width}]}>
+      <Pressable onPress={onPress} style={styles.pressArea}>
+        <View style={[styles.card, {minHeight: height* 0.4}]}>
+          <Animated.View style={[styles.face, frontStyle]}>
+            <Text style={styles.text}>{card?.front ?? "This deck is empty"}</Text>
+          </Animated.View>
+
+          <Animated.View style={[styles.face, backStyle]}>
+            <Text style={styles.text}>{card?.back ?? ""}</Text>
+          </Animated.View>
+        </View>
       </Pressable>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  flashCard: {
-    alignItems: "center",
-    justifyContent: "center",
+  container: {
     flex: 1,
-  },
-  pressArea: {
+    width: "100%",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "lightblue",
-    width: "85%",
-    borderWidth: 2,
-    height: "100%"
   },
+
+  pressArea: {
+    flex: 1,
+    width: "85%",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  card: {
+    width: "100%",
+    flex: 1,
+    maxWidth: 500
+  },
+
+  face: {
+    ...StyleSheet.absoluteFillObject,
+    backfaceVisibility: "hidden",
+    alignItems: "center",
+    justifyContent: "center",
+    borderWidth: 2,
+    borderRadius: 12,
+    backgroundColor: "lightblue",
+  },
+
   text: {
-    fontWeight: 500,
+    fontWeight: "500",
     textAlign: "center",
-    width: "85%"
+    width: "85%",
   },
 });

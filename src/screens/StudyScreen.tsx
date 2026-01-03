@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { StyleSheet, FlatList, View } from "react-native";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import AddCardButton from '../components/StudyScreen/AddCardButton';
 import DeleteButton from "../components/StudyScreen/DeleteButton";
@@ -23,8 +22,9 @@ export default function StudyScreen({ deckId }: { deckId: string }) {
 
   return (
     <SafeAreaView style={styles.areaView}>
-      <View style={{ height: '70%', paddingTop: 130 }}>
+      <View style={{ height: "70%", width: "100%", paddingTop: 130, alignItems: "center" }}>
         <FlatList
+          style={{flex: 1}}
           data={cards}
           keyExtractor={(item) => item.id}
           horizontal
