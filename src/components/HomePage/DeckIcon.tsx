@@ -13,8 +13,8 @@ type Props = {
 
 export default function DeckIcon({ deckId, deckName, onDelete, onRename }: Props) {
     const { width } = useWindowDimensions();
-    const iconSize = width * 0.1
-    const fontSize = width * .06
+    const iconSize = Math.min(width * 0.1, 40);
+    const fontSize = Math.min(width * 0.1, 24 );
 
     return (
         <View style={styles.container}>
@@ -34,13 +34,14 @@ export default function DeckIcon({ deckId, deckName, onDelete, onRename }: Props
 
 
 const styles = StyleSheet.create({
-
     container: {
         borderRadius: 8,
         borderWidth: 2,
         flexDirection: "row",
         alignItems: "center",
         width: "90%",
+        maxWidth: 800,
+        maxHeight: 200,
         alignSelf: "center",
         marginBottom: 10
     },

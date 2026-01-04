@@ -20,7 +20,7 @@ export default function AddDeckButton({ onConfirm }: Props) {
         <View>
             {/*Add button*/}
             <Pressable onPress={() => setVisible(true)} style={styles.addButton} >
-                <Ionicons name="add-circle-outline" size={iconSize} color="black" />
+                <Ionicons name="add-circle-outline" size={Math.min(50, iconSize)} color="black" />
             </Pressable>
 
             {/*Add deck popup*/}
@@ -89,6 +89,7 @@ const styles = StyleSheet.create({
         padding: 20,
         borderRadius: 8,
         width: "90%",
+        maxWidth: 800,
         position: "relative",
         paddingBottom: 100,
     },

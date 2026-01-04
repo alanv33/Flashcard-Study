@@ -4,18 +4,17 @@ import EvilIcons from '@expo/vector-icons/EvilIcons';
 
 type Props = {
     onConfirm: () => void;
+    iconSize: number
 };
 
-export default function DeleteButton({ onConfirm }: Props) {
+export default function DeleteButton({ onConfirm, iconSize }: Props) {
     const [visible, setVisible] = useState(false);
-    const { width } = useWindowDimensions();
-    const iconSize = width * 0.1
 
     return (
         <View style={styles.container}>
             {/* Delete (trashcan) button*/}
             <Pressable onPress={() => setVisible(true)} style={styles.deleteButton}>
-                <EvilIcons name="trash" size={iconSize} color="black" />
+                <EvilIcons name="trash" size={Math.min(50, iconSize)} color="black" />
             </Pressable>
 
             {/* Delete card popup*/}
@@ -56,19 +55,22 @@ const styles = StyleSheet.create({
         left: 5,
     },
 
-    //Popup Style
+    //Overlay Style
     overlay: {
         flex: 1,
         backgroundColor: "rgba(0,0,0,0.5)",
         justifyContent: "center",
         alignItems: "center",
     },
+
+    //Popup styles
     popup: {
         backgroundColor: "white",
         padding: 20,
         borderRadius: 8,
         height: "20%",
         width: "70%",
+        maxWidth: 400,
         position: "relative",
         alignItems: "center",
     },

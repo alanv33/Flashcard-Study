@@ -7,19 +7,18 @@ import { Flashcard } from "../../models/StudyScreen";
 
 type Props = {
     onConfirm: (card: Flashcard) => void;
+    iconSize: number
 }
 
-export default function AddCardButton({ onConfirm }: Props) {
+export default function AddCardButton({ onConfirm, iconSize }: Props) {
     const [visible, setVisible] = useState(false);
     const [frontText, setFrontText] = useState("");
     const [backText, setBackText] = useState("");
     const [frontHeight, setFrontHeight] = useState(60);
     const [backHeight, setBackHeight] = useState(80);
 
-    const { width } = useWindowDimensions();
-    const iconSize = width * 0.08
 
-    function onRequestCloseAddCardPopup(){
+    function onRequestCloseAddCardPopup() {
         setVisible(false);
         setFrontText("");
         setBackText("");
@@ -31,7 +30,7 @@ export default function AddCardButton({ onConfirm }: Props) {
         <View style={styles.container}>
             {/* Add Button*/}
             <Pressable onPress={() => setVisible(true)} style={styles.addButton} >
-                <Ionicons name="add-circle-outline" size={iconSize} color="black" />
+                <Ionicons name="add-circle-outline" size={Math.min(50, iconSize * 0.8)} color="black" />
             </Pressable>
 
             {/* Add Card Popup*/}
@@ -105,18 +104,20 @@ const styles = StyleSheet.create({
         right: 15,
     },
 
-    //Add card styles
+    //Overlay Style
     overlay: {
         flex: 1,
         backgroundColor: "rgba(0,0,0,0.5)",
         justifyContent: "center",
         alignItems: "center",
     },
+    //Popup styles
     popup: {
         backgroundColor: "white",
         padding: 20,
         borderRadius: 8,
         width: "90%",
+        maxWidth: 800,
         position: "relative",
         paddingBottom: 120,
     },

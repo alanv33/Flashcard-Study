@@ -10,7 +10,7 @@ type Props = {
 }
 export default function OptionsMenu({ deckId, onDelete, onRename }: Props) {
   const { width: screenWidth, height: screenHeight } = useWindowDimensions();
-  const iconSize = screenWidth * 0.065;
+  const iconSize = Math.min(screenWidth * 0.065, 40);
 
 
   const [visible, setVisible] = useState(false);

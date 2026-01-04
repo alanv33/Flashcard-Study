@@ -1,19 +1,22 @@
 import { useEffect } from "react";
-import { Pressable, View, Text, StyleSheet, useWindowDimensions } from "react-native";
-import Animated, { useSharedValue, useAnimatedStyle, withTiming } from "react-native-reanimated";
-import { Flashcard } from "../../models/StudyScreen";
+import { Pressable, StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import Animated, { useAnimatedStyle, useSharedValue, withTiming } from "react-native-reanimated";
+import type { Flashcard } from "../../models/StudyScreen";
 
 type Props = {
   card: Flashcard | null;
   error: string | null;
   loading: boolean;
+  pageWidth: number;
 };
 
-export default function FlashcardView({ card, error, loading }: Props) {
-  const { width, height } = useWindowDimensions();
+export default function FlashcardView({ card, error, loading, pageWidth }: Props) {
+  const { height } = useWindowDimensions();
+
   const rot = useSharedValue(0);
 
   useEffect(() => {
+    // reset rotation when card changes
     rot.value = 0;
   }, [card?.id]);
 
@@ -27,19 +30,30 @@ export default function FlashcardView({ card, error, loading }: Props) {
 
   function onPress() {
     if (!card || loading || error) return;
-    rot.value = withTiming(rot.value === 0 ? 180 : 0, { duration: 220 });
+    rot.value = withTiming(rot.value === 0 ? 180 : 0, { duration: 350 });
   }
 
+  // Display rules
+  const frontText =
+    error ? error : loading ? "Loading..." : card?.front ?? "This deck is empty";
+  const backText = card?.back ?? "";
+
+  // font sizing based on page width so it behaves on web too
+  const fontSize = Math.min(pageWidth * 0.045, 28);
+
   return (
-    <View style={[styles.container, { width}]}>
+    <View style={[styles.page, { width: pageWidth }]}>
       <Pressable onPress={onPress} style={styles.pressArea}>
-        <View style={[styles.card, {minHeight: height* 0.4}]}>
+        {/* Card box */}
+        <View style={[styles.card, { minHeight: Math.min(1000, height * 0.45) }]}>
+          {/* Front face */}
           <Animated.View style={[styles.face, frontStyle]}>
-            <Text style={styles.text}>{card?.front ?? "This deck is empty"}</Text>
+            <Text style={[styles.text, { fontSize }]}>{frontText}</Text>
           </Animated.View>
 
+          {/* Back face */}
           <Animated.View style={[styles.face, backStyle]}>
-            <Text style={styles.text}>{card?.back ?? ""}</Text>
+            <Text style={[styles.text, { fontSize }]}>{backText}</Text>
           </Animated.View>
         </View>
       </Pressable>
@@ -48,26 +62,23 @@ export default function FlashcardView({ card, error, loading }: Props) {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  page: {
     flex: 1,
-    width: "100%",
     alignItems: "center",
     justifyContent: "center",
+    paddingHorizontal: 24,
+    marginBottom: 20,
   },
-
   pressArea: {
-    flex: 1,
-    width: "85%",
+    width: "100%",
     alignItems: "center",
     justifyContent: "center",
-  },
-
-  card: {
-    width: "100%",
     flex: 1,
-    maxWidth: 500
   },
-
+  card: {
+    width: "95%",
+    maxWidth: 500,
+  },
   face: {
     ...StyleSheet.absoluteFillObject,
     backfaceVisibility: "hidden",
@@ -76,11 +87,11 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     borderRadius: 12,
     backgroundColor: "lightblue",
+    padding: 16,
   },
-
   text: {
     fontWeight: "500",
     textAlign: "center",
-    width: "85%",
+    width: "100%",
   },
 });
