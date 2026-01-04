@@ -1,1 +1,3 @@
-The app is meant to be ran on android. Releases for IOS have not been tested or released. Web view works, but the view is heavily distorted. 
+The app is meant to be ran on android and windows. Support and testing for IOS is still in progress.
+For window users, download the windows_release.zip and unzip. Launch the .exe file.
+For android users, download the apk and run it.
