@@ -16,6 +16,7 @@ export default function OptionsMenu({ deckId, onDelete, onRename }: Props) {
   const [visible, setVisible] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [renameVisible, setRenameVisible] = useState(false);
+  const [deleteVisible, setDeleteVisible] = useState(false);
   const [newDeckName, setDeckName] = useState("");
   const [renamePopupHeight, setRenamePopupHeight] = useState(0);
 
@@ -91,7 +92,7 @@ export default function OptionsMenu({ deckId, onDelete, onRename }: Props) {
             <Text>Rename</Text>
           </Pressable>
 
-          <Pressable style={styles.item} onPress={() => { closeMenu(); onDelete(deckId) }}>
+          <Pressable style={styles.item} onPress={() => { closeMenu(); setDeleteVisible(true) }}>
             <Text>Delete</Text>
           </Pressable>
         </Animated.View>
@@ -102,8 +103,8 @@ export default function OptionsMenu({ deckId, onDelete, onRename }: Props) {
         <View style={styles.overlay}>
           <Pressable style={StyleSheet.absoluteFill} onPress={() => { setRenameVisible(false); setDeckName("") }} />
 
-          <View style={styles.popup}>
-            <Text style={styles.headerText}>Rename</Text>
+          <View style={styles.renamePopup}>
+            <Text style={styles.renameHeaderText}>Rename</Text>
             <Text style={styles.nameText}> Name: </Text>
             <TextInput
               value={newDeckName}
@@ -117,17 +118,37 @@ export default function OptionsMenu({ deckId, onDelete, onRename }: Props) {
               style={[styles.inputTextBox, { height: renamePopupHeight }]}
             />
 
-            <Pressable style={styles.confirmButton}
+            <Pressable style={styles.confirmRenameButton}
               onPress={() => { onRename(deckId, newDeckName); setRenameVisible(false) }}
             >
               <Text>Confirm</Text>
             </Pressable>
-            <Pressable onPress={() => { setRenameVisible(false); setDeckName(""); }} style={styles.cancelButton}>
+            <Pressable onPress={() => { setRenameVisible(false); setDeckName(""); }} style={styles.cancelRenameButton}>
               <Text>Cancel</Text>
             </Pressable>
           </View>
         </View>
       </Modal >
+
+      {/* Delete card popup*/}
+      <Modal transparent visible={deleteVisible} animationType="fade">
+        <View style={styles.overlay}>
+          <Pressable style={StyleSheet.absoluteFill} onPress={() => setVisible(false)} />
+
+          <View style={styles.deletePopup}>
+            <Text style={styles.deletePopupText}>Delete this deck?</Text>
+
+            <Pressable onPress={() => { onDelete(deckId); setDeleteVisible(false) }} style={styles.confirmDeleteButton}>
+              <Text>Confirm</Text>
+            </Pressable>
+
+            <Pressable onPress={() => setDeleteVisible(false)} style={styles.cancelDeleteButton}>
+              <Text>Cancel</Text>
+            </Pressable>
+
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -164,14 +185,16 @@ const styles = StyleSheet.create({
   },
 
 
-  //Rename popup styles
+  // Overlay Popup
   overlay: {
     flex: 1,
     backgroundColor: "rgba(0,0,0,0.5)",
     justifyContent: "center",
     alignItems: "center",
   },
-  popup: {
+
+  //Rename Popup styles
+  renamePopup: {
     backgroundColor: "white",
     padding: 20,
     borderRadius: 8,
@@ -180,7 +203,7 @@ const styles = StyleSheet.create({
     paddingBottom: 100,
   },
 
-  headerText: {
+  renameHeaderText: {
     fontWeight: "bold",
     textAlign: "center",
     fontSize: 16,
@@ -189,7 +212,7 @@ const styles = StyleSheet.create({
     alignSelf: "center"
   },
 
-  cancelButton: {
+  cancelRenameButton: {
     position: "absolute",
     bottom: 8,
     left: 18,
@@ -200,7 +223,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12
   },
 
-  confirmButton: {
+  confirmRenameButton: {
     position: "absolute",
     bottom: 8,
     right: 18,
@@ -225,4 +248,46 @@ const styles = StyleSheet.create({
     textAlignVertical: "top",
     marginTop: 5,
   },
+
+    //Popup styles
+    deletePopup: {
+        backgroundColor: "white",
+        padding: 20,
+        borderRadius: 8,
+        height: "20%",
+        width: "70%",
+        maxWidth: 400,
+        position: "relative",
+        alignItems: "center",
+    },
+
+    deletePopupText: {
+        fontWeight: "bold",
+        textAlign: "center",
+        fontSize: 24,
+        position: "absolute",
+        top: 45
+    },
+
+    cancelDeleteButton: {
+        position: "absolute",
+        bottom: 8,
+        left: 8,
+        borderColor: "grey",
+        borderWidth: 2,
+        borderRadius: 8,
+        paddingHorizontal: 32,
+        paddingVertical: 8
+    },
+
+    confirmDeleteButton: {
+        position: "absolute",
+        bottom: 8,
+        right: 8,
+        borderColor: "grey",
+        borderWidth: 2,
+        borderRadius: 8,
+        paddingHorizontal: 32,
+        paddingVertical: 8
+    }
 });
